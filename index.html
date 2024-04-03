@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ESM/ERDM Mission</title>
+
+    <!-- using locally hosted roslib and fonts -->
+    <!-- <link rel="stylesheet" type="text/css" href="http://localhost:8000/asset/styles.css"> -->
+    <link rel="stylesheet" type="text/css" href="asset/styles.css">
+    <script type="text/javascript" src="http://localhost:8000/asset/roslib.min.js"></script>
+    <link rel="stylesheet" href="./leaflet/leaflet.css" />
+
+
+</head>
+<style>
+    #map {
+        /* height: 600px;
+        width: 100%;
+        border-radius: auto; */
+        width: 100%;
+        height: 83%;
+        border: 3px solid #D95A27;
+    }
+</style>
+
+<body style="background-color: #0B172B; height: full; width: full;">
+
+    <div style=" margin-left: 50px; margin-top: 2px;height: 100px;">
+        <div class="header" style=" height: 60px;">
+            <div class="header-one" style="margin-top: -25px;">
+                <p class="mission" style="color: #D95A27; margin-left: 80px;"><b>ESM/ERDM Mission</b></p>
+            </div>
+            <div class="header-two">
+                <img class="logo" src="asset/UMRT new logo.png" alt="">
+            </div>
+        </div>
+
+
+        <div class="main">
+
+            <!-- <label><b>AUTONOMOUS DASHBOARD</b></label>  -->
+
+
+            <div class="container" style=" display: flex; flex-direction: column; margin-top: 40px;">
+
+
+                <div class="one" style="height: 100%; width: 100%; ">
+                    <img id="image_sub">
+                </div>
+
+            </div>
+            <script src="./leaflet/leaflet.js"></script>
+        </div>
+
+        <div class="point-table">
+            <div style="margin-top: -830px; height: 200px; margin-left: 1450px; margin-right: 10px;">
+                <table style="border-spacing: 5px; border: none;">
+                    <tr>
+                        <td id="modeDisplay">Mode</td>
+                        <td><input type="checkbox" id="modeSwitch" /><label for="modeSwitch">Toggle</label></td>
+                    </tr>
+                    <tr>
+                        <td>Switch</td>
+                        <td><input type="checkbox" id="switchSwitch" /><label for="switchSwitch">Toggle</label></td>
+                    </tr>
+                    <tr>
+                        <td>Pendrive</td>
+                        <td><input type="checkbox" id="pendriveSwitch" /><label for="pendriveSwitch">Toggle</label></td>
+                    </tr>
+                    <tr>
+                        <td>Joystick</td>
+                        <td><input type="checkbox" id="joystickSwitch" /><label for="joystickSwitch">Toggle</label></td>
+                    </tr>
+                    <tr>
+                        <td>Keyboard</td>
+                        <td><input type="checkbox" id="keyboardSwitch" /><label for="keyboardSwitch">Toggle</label></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <button id="hiddenButton" style="display: none;"></button>
+
+    </div>
+
+    </div>
+
+
+
+    <script>
+        // Create a ROS connection
+        const ros = new ROSLIB.Ros({
+            url: 'ws://localhost:9090',  // Adjust the URL to match your ROSBridge server address.
+        });
+
+        var listener = new ROSLIB.Topic({
+            ros: ros,
+            name: '/switch_image',
+            messageType: 'sensor_msgs/msg/CompressedImage'
+        });
+
+        var imageData1;
+
+        listener.subscribe(function (message) {
+            console.log('Received message on ' + listener.name);
+            imageData1 = "data:image/jpeg;base64," + message.data;
+            updateImages();
+        });
+
+        function updateImages() {
+            if (imageData1) {
+                document.getElementById('image_sub').src = imageData1;
+            }
+        }
+
+    </script>
+
+
+</body>
+
+</html>
